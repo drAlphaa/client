@@ -1,1 +1,161 @@
-first commit
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+
+      <link href="https://fonts.googleapis.com/css?family=Anton|Pacifico&display=swap" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+      <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+      <script type="text/javascript" src="https://s3.amazonaws.com/static.mlh.io/blog-code/2018-02-clarifai-nutrition-app/wolfram.js"></script>
+      <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/static.mlh.io/blog-code/2018-02-clarifai-nutrition-app/app.css" />
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+      <meta name="google-signin-client_id" content="439620541737-dlan1cjsb34q25u6um337690o43ep846.apps.googleusercontent.com">
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body style="background-color: white;">
+      <!-- landing page-->
+      <div id="landing-page">
+        <nav style="background-color: white">
+          <ul class="container tabs" style="width: 70%">
+            <li><a href=""><img src="./css/logo.png" style="width: 80%"></a></li>
+            <li class="right tab"><a href="#modal-login" style="color: #616161; font-size: 16px" class="modal-trigger">Login</a></li>
+            <div id="modal-login" class="modal" style="height: 50%; width: 25%">
+              <div style="padding: 30px">
+                <form id="login-form">
+                  <h5 class="black-text">Login</h5>
+                  <div class="input-field col s6">
+                    <input id="email" type="email" class="validate">
+                    <label for="email">Email</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                  </div>
+                  <button class="btn">Log In</button>
+                  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                </form>
+              </div>
+            </div>
+            <li class="right tab"><a href="#modal-register" style="color: #616161; font-size: 16px" class="modal-trigger">Signup</a></li>
+            <div id="modal-register" class="modal" style="height: 60%; width: 25%">
+              <div style="padding: 30px">
+                <form id="register-form">
+                  <h5 class="black-text">Register</h5>
+                  <div class="input-field col s6">
+                    <input id="name" type="text" class="validate">
+                    <label for="name">Name</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="email-register" type="email" class="validate">
+                    <label for="email">Email</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="password-register" type="password" class="validate">
+                    <label for="password">Password</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="height" type="number" class="validate">
+                    <label for="height">height(cm)</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="weight" type="number" class="validate">
+                    <label for="weight">weight(kg)</label>
+                  </div>
+                  <button class="btn">Register</button>
+                </form>
+              </div>
+            </div>
+            <li><a href="">Features</a></li>
+          </ul>
+        </nav>
+        <div class="center-align" style="padding-top: 70px; padding-bottom: 100px">
+          <h1 style="font-family: 'Pacifico', cursive;">drAlphaa</h1>
+          <h1 style="font-family: 'Anton', sans-serif;">Calculate your Calories</h1>
+          <button class="btn center-align"><a href="#modal-register" class="modal-trigger" style="color: white">Get Started</a></button>
+        </div>
+        <div style="background: url('./css/background.jpg') no-repeat center center fixed; background-size: cover; height: 100vh">
+          <p class="">&copy; 2019</p>
+        </div>
+      </div>
+
+      <div id="content" style="height: 1000px; overflow: visible">
+        <div class="row">
+          <!-- SideNav -->
+          <div class="col s3">
+            <ul id="slide-out" class="sidenav" style="transform: translateX(0%) !important">
+              <li>
+                <div class="user-view">
+                  <div class="background">
+                    <img src="css/sidenav.jpeg">
+                  </div>
+                  <a href="#name"><span class="black-text text-bold name" id="logged-name"></span></a>
+                  <a href="#email"><span class="black-text text-bold email" id="logged-email"></span></a>
+                </div>
+              </li>
+              <li><a href="#!"><i class="material-icons">cloud</i>Get Food's Nutritional Facts</a></li>
+              <li><div class="divider"></div></li>
+            </ul>
+          </div>
+
+          <!-- Upload Gambar Makanan -->
+          <div style="background-color: #ececeb;" class="col s9" id="upload">
+            <nav style="background-color: #537ec5">
+              <ul>
+                <li id="bmi-data"></li>
+                <li><a href="" id="signout"><button class="btn">Signout</button></a></li>
+              </ul>
+            </nav>
+            <div>
+              <h2>What are you eating?</h2>
+              <h4>Snap a photo of your food & upload for a nutritional facts.</h4>
+
+
+              <form action="#">
+                <input type="file" id="filename" placeholder="Filename" size="100"/>
+                <button onclick="predict_click($('#filename').val(), 'file'); return false;">Get my Nutritional Facts!</button>
+              </form>
+
+              <div id="predictions">
+                <div class="food-photo" class="col s2">
+                  <div class="step"><span>1</span> Upload a Photo</div>
+                </div>
+                <div class="nutrition" class="col s10">
+                  <div class="step"><span>2</span> Get the Nutritional Facts</div>
+                  <div id="concepts"></div>
+                </div>
+              </div>
+              <div id="yesno">
+                <h2>Should I eat the food above?</h2>
+                <button id="yesnobtn">Get your Answer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!--JavaScript at end of body for optimized loading-->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+      <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+      <script type="text/javascript" src="./js/main.js"></script>
+      <script type="text/javascript" src="./js/predict.js"></script>
+
+
+      <script>
+        $(document).ready(function(){
+          $('.sidenav').sidenav();
+        });
+        $('.modal').modal();
+        $('.tabs').tabs();
+      </script>
+    </body>
+  </html>
