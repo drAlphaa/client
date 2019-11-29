@@ -1,1 +1,233 @@
-first commit
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+
+      <link href="https://fonts.googleapis.com/css?family=Anton|Pacifico&display=swap" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+      <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+      <script type="text/javascript" src="https://s3.amazonaws.com/static.mlh.io/blog-code/2018-02-clarifai-nutrition-app/wolfram.js"></script>
+      <script type="text/javascript" src="predict.js"></script>
+      <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/static.mlh.io/blog-code/2018-02-clarifai-nutrition-app/app.css" />
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body style="background-color: white">
+      <!--
+      <div>
+        <nav style="background-color: white">
+          <ul class="container tabs" style="width: 70%">
+            <li><a href=""><img src="./css/logo.png" style="width: 80%"></a></li>
+            <li class="right tab"><a href="#modal-login" style="color: #616161; font-size: 16px" class="modal-trigger">Login</a></li>
+            <div id="modal-login" class="modal" style="height: 50%; width: 25%">
+              <div style="padding: 30px">
+                <form>
+                  <h5 class="black-text">Login</h5>
+                  <div class="input-field col s6">
+                    <input id="email" type="email" class="validate">
+                    <label for="email">Email</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                  </div>
+                  <button class="btn">Log In</button>
+                </form>
+              </div>
+            </div>
+            <li class="right tab"><a href="#modal-register" style="color: #616161; font-size: 16px" class="modal-trigger">Signup</a></li>
+            <div id="modal-register" class="modal" style="height: 60%; width: 25%">
+              <div style="padding: 30px">
+                <form>
+                  <h5 class="black-text">Register</h5>
+                  <div class="input-field col s6">
+                    <input id="name" type="text" class="validate">
+                    <label for="name">Name</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="email" type="email" class="validate">
+                    <label for="email">Email</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                  </div>
+                  <button class="btn">Register</button>
+                </form>
+              </div>
+            </div>
+            <li><a href="">Features</a></li>
+          </ul>
+        </nav>
+        <div class="center-align" style="padding-top: 70px; padding-bottom: 100px">
+          <h1 style="font-family: 'Pacifico', cursive;">drAlphaa</h1>
+          <h1 style="font-family: 'Anton', sans-serif;">Calculate your Calories</h1>
+          <button class="btn center-align"><a href="#modal-register" class="modal-trigger" style="color: white">Get Started</a></button>
+        </div>
+        <div style="background: url('./css/background.jpg') no-repeat center center fixed; background-size: cover; height: 100vh">
+          <p class="">&copy; 2019</p>
+        </div>
+      </div>
+    -->
+
+      <!-- SideNav -->
+      <div class="row">
+        <div class="col s3">
+          <ul id="slide-out" class="sidenav" style="transform: translateX(0%) !important">
+            <li>
+              <div class="user-view">
+                <div class="background">
+                  <img src="css/sidenav.jpeg">
+                </div>
+                <a href="#user"><img class="circle" src=""></a>
+                <a href="#name"><span class="black-text text-bold name"><h6>John Doe</h5></span></a>
+                <a href="#email"><span class="black-text text-bold email"><h6>jdandturk@gmail.com</h5></span></a>
+              </div>
+            </li>
+            <li><a href="#!"><i class="material-icons">cloud</i>This Food's Calories ?!</a></li>
+            <li><div class="divider"></div></li>
+            <li><a href="#!"><i class="material-icons">cloud</i>My BMI History</a></li>
+            <li><div class="divider"></div></li>
+            <li><a href="#!"><i class="material-icons">cloud</i>My Eating History</a></li>
+          </ul>
+        </div>
+        
+        <!-- Upload Gambar Makanan
+        <div style="background-color: #ececeb; height: 100vw" class="col s9">
+          <nav style="background-color: #537ec5">
+            <ul>
+              <li><a href="">This Food's Calories ?!</a></li>
+              <li><a href="">My BMI</a></li>
+            </ul>
+          </nav>
+          <div>
+            <h2>What are you eating?</h2>
+            <h4>Snap a photo of your food & upload for a nutritional facts.</h4>
+
+            <form action="#">
+              <input type="file" id="filename" placeholder="Filename" size="100"/>
+              <button onclick="predict_click($('#filename').val(), 'file'); return false;">Get my Nutritional Facts!</button>
+            </form>
+
+            <div id="predictions">
+              <div class="food-photo" class="col s2">
+                <div class="step"><span>1</span> Upload a Photo</div>
+              </div>
+              <div class="nutrition" class="col s10">
+                <div class="step"><span>2</span> Get the Nutritional Facts</div>
+                <div id="concepts"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      -->
+
+      <!-- History Makan -->
+      <div>
+        <div class="row">
+          <div class="col s3">
+            <div class="card">
+              <div class="card-content black-text">
+                <span class="card-title">Ini Tanggal</span>
+                <table>
+                  <thead>
+                    <tr>
+                        <th>Food Name</th>
+                        <th>Calories</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td>French Fries</td>
+                      <td>345</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart.js -->
+      <div>
+        <canvas id="myChart" width="400" height="400" style="width: 50%"></canvas>
+      </div>
+
+      <!-- Update User Profile -->
+      <div>
+        
+        <label>Height</label>
+        <input type="" name="">
+
+        <label>Weight</label>
+        <input type="" name="">
+
+        <button class="btn">Update</button>
+      </div>
+
+      <!--JavaScript at end of body for optimized loading-->
+      <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+      <script type="text/javascript" src="./js/predict.js"></script>
+
+      <script>
+        $(document).ready(function(){
+          $('.sidenav').sidenav();
+        });
+        $('.modal').modal();
+        $('.tabs').tabs();
+      </script>
+
+      <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+      </script>
+    </body>
+  </html>
