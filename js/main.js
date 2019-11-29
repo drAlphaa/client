@@ -26,9 +26,12 @@ $(document).ready(function(){
       }
     })
     .done(response => {
+      console.log(response)
       localStorage.setItem('token', response.token)
       localStorage.setItem('name', response.name)
       localStorage.setItem('email', response.email)
+      localStorage.setItem('bmidata', response.bmiData.bmi)
+      localStorage.setItem('bmistatus', response.bmiData.status)
       $('#landing-page').hide()
       $('#content').show();
       $('#logged-name').append(`
@@ -36,6 +39,9 @@ $(document).ready(function(){
       `)
       $('#logged-email').append(`
         <h6>${localStorage.email}</h6>
+      `)
+      $('#bmi-data').append(`
+        <a href="">Your BMI: ${localStorage.bmidata} and your BMI Status: ${localStorage.bmistatus}</a>
       `)
       Swal.fire(
         'Logged In',
